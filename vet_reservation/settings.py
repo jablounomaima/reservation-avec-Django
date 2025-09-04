@@ -34,7 +34,7 @@ SECRET_KEY = 'django-insecure-i09%=+^f1i$%sr_+t3tw_13pg9%)9*qj)h50-v@h=sikbvh)ea
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 
 # Application definition
@@ -147,4 +147,4 @@ ALLOWED_HOSTS = [
 ]
 import os
 
-SECRET_KEY = os.environ.get('SECRET_KEY', 'ta_cle_secrete_developpement')
+SECRET_KEY = os.environ.get('SECRET_KEY', '6k5$!8a!5iq1c9tjcz#%nverc2q@-t_syup7p2z*w_ar8%iwu(')
