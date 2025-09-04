@@ -1,0 +1,243 @@
+/* appointments/static/appointments/css/style.css */
+
+/* Police moderne */
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&family=Montserrat:wght@700&display=swap');
+
+body {
+    font-family: 'Poppins', sans-serif;
+    background: linear-gradient(135deg, #f5f7fa 0%, #e4edf5 100%);
+    color: #333;
+    line-height: 1.6;
+    margin: 0;
+    padding: 0;
+}
+
+/* En-tête personnalisé */
+.navbar {
+    background: linear-gradient(135deg, #0056b3, #003d82) !important;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    border-bottom: 3px solid #ffd700;
+}
+
+.navbar-brand {
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 700;
+    font-size: 1.5rem;
+    color: white !important;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.navbar-brand i {
+    font-size: 1.8rem;
+}
+
+.nav-link {
+    color: rgba(255, 255, 255, 0.9) !important;
+    font-weight: 500;
+    transition: color 0.3s ease;
+}
+
+.nav-link:hover {
+    color: #fff !important;
+}
+
+/* Titres */
+h2, h3 {
+    color: #0056b3;
+    font-weight: 700;
+    text-align: center;
+    margin-bottom: 1.5rem;
+    position: relative;
+}
+
+h2::after {
+    content: '';
+    display: block;
+    width: 60px;
+    height: 3px;
+    background: #ffd700;
+    margin: 10px auto;
+    border-radius: 3px;
+}
+
+/* Conteneur principal */
+.container {
+    max-width: 1200px;
+    margin: 30px auto;
+    padding: 0 20px;
+}
+
+/* Tableau élégant */
+.table {
+    background: white;
+    border-radius: 15px;
+    overflow: hidden;
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+    margin-top: 20px;
+    font-size: 0.95rem;
+}
+
+.table th {
+    background: linear-gradient(135deg, #007bff, #0056b3);
+    color: white;
+    text-align: center;
+    font-weight: 600;
+    padding: 14px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.table td {
+    vertical-align: middle;
+    padding: 14px;
+    border-bottom: 1px solid #eee;
+}
+
+.table tr:hover {
+    background-color: #f8f9ff;
+    transform: scale(1.005);
+    transition: all 0.2s ease;
+}
+
+.table tr:last-child td {
+    border-bottom: none;
+}
+
+/* Boutons stylisés */
+.btn {
+    border-radius: 50px;
+    padding: 8px 16px;
+    font-size: 0.9rem;
+    font-weight: 500;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+}
+
+.btn-primary {
+    background: linear-gradient(135deg, #007bff, #0056b3);
+    border: none;
+}
+
+.btn-primary:hover {
+    background: #0056b3;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 12px rgba(0, 123, 255, 0.2);
+}
+
+.btn-success {
+    background: linear-gradient(135deg, #28a745, #1e7e34);
+    border: none;
+}
+
+.btn-success:hover {
+    background: #1e7e34;
+    transform: translateY(-2px);
+}
+
+.btn-danger {
+    background: linear-gradient(135deg, #dc3545, #c82333);
+    border: none;
+}
+
+.btn-outline-primary {
+    border-color: #007bff;
+    color: #007bff;
+}
+
+.btn-outline-primary:hover {
+    background: #007bff;
+    color: white;
+}
+
+/* Alertes modernes */
+.alert {
+    border-radius: 12px;
+    padding: 16px;
+    font-size: 0.95rem;
+    background: white;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+    border: none;
+}
+
+.alert-info {
+    border-left: 5px solid #007bff;
+}
+
+.alert-warning {
+    border-left: 5px solid #ffc107;
+}
+
+.alert-danger {
+    border-left: 5px solid #dc3545;
+}
+
+/* Formulaire */
+.form-control {
+    border-radius: 10px;
+    border: 1.5px solid #ced4da;
+    padding: 10px 14px;
+    transition: all 0.3s ease;
+}
+
+.form-control:focus {
+    border-color: #007bff;
+    box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+}
+
+.form-label {
+    font-weight: 600;
+    color: #0056b3;
+    margin-bottom: 8px;
+}
+
+/* Badges (statut) */
+.badge {
+    font-weight: 600;
+    padding: 6px 12px;
+    border-radius: 50px;
+    text-transform: uppercase;
+    font-size: 0.8rem;
+}
+
+.badge.bg-success {
+    background: linear-gradient(135deg, #28a745, #1e7e34);
+    color: white;
+}
+
+.badge.bg-warning {
+    background: linear-gradient(135deg, #ffc107, #e0a800);
+    color: #1d3557;
+}
+
+.badge.bg-danger {
+    background: linear-gradient(135deg, #dc3545, #c82333);
+    color: white;
+}
+
+/* Petits détails */
+.btn i, .badge i {
+    margin-right: 5px;
+}
+
+.text-muted small {
+    color: #6c757d !important;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .container {
+        padding: 0 15px;
+    }
+    h2 {
+        font-size: 1.4rem;
+    }
+    .table {
+        font-size: 0.85rem;
+    }
+    .btn {
+        font-size: 0.85rem;
+        padding: 6px 12px;
+    }
+}

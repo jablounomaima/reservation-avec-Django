@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Historique de {{ pet.name }}</title>
+    <style>
+        body { font-family: Arial; padding: 2cm; }
+        h1 { color: #0056b3; border-bottom: 2px solid #ddd; padding-bottom: 10px; }
+        p { line-height: 1.6; }
+        table { width: 100%; border-collapse: collapse; margin: 20px 0; }
+        th, td { border: 1px solid #ccc; padding: 8px; text-align: left; }
+        th { background-color: #f0f0f0; font-weight: bold; }
+        .footer { margin-top: 30px; font-size: 0.9em; color: #666; }
+    </style>
+</head>
+<body>
+    <h1>🏥 Historique vétérinaire</h1>
+    <p><strong>Animal :</strong> {{ pet.name }} ({{ pet.get_species_display }})</p>
+    <p><strong>Propriétaire :</strong> {{ pet.owner.get_full_name|default:pet.owner.username }}</p>
+    <p><strong>Date d'impression :</strong> {{ now|date:"d/m/Y H:i" }}</p>
+
+    <table>
+        <thead>
+            <tr>
+                <th>Service</th>
+                <th>Date</th>
+                <th>Statut</th>
+                <th>Notes</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for appt in appointments %}
+            <tr>
+                <td>{{ appt.get_service_display }}</td>
+                <td>{{ appt.date|date:"d/m/Y" }}</td>
+                <td>{{ appt.get_status_display }}</td>
+                <td>{{ appt.notes|default:"—" }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <div class="footer">
+        Clinique Vétérinaire - Tous droits réservés
+    </div>
+</body>
+</html>
