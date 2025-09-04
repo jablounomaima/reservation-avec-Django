@@ -139,3 +139,12 @@ STATIC_ROOT = BASE_DIR / 'collected_static'  # Utilisé avec collectstatic
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+DEBUG = False  # ✅ En production
+ALLOWED_HOSTS = [
+    'your-app.onrender.com',      # ← Remplace par ton URL Render
+    'localhost',
+    '127.0.0.1',
+]
+import os
+
+SECRET_KEY = os.environ.get('SECRET_KEY', 'ta_cle_secrete_developpement')
