@@ -1,0 +1,12 @@
+{% extends 'appointments/base.html' %}
+
+{% block content %}
+<h2>Annuler le rendez-vous</h2>
+<p>Êtes-vous sûr de vouloir annuler le rendez-vous pour <strong>{{ appointment.pet_name }}</strong> le <strong>{{ appointment.date|date:"d/m/Y" }}</strong> à <strong>{{ appointment.time|time:"H:i" }}</strong> ?</p>
+
+<form method="post">
+    {% csrf_token %}
+    <button type="submit" class="btn btn-danger">Oui, annuler</button>
+    <a href="{% url 'appointments:appointment_list' %}" class="btn btn-secondary">Non</a>
+</form>
+{% endblock %}

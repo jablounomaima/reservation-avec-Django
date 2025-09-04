@@ -1,0 +1,14 @@
+<!-- appointments/templates/appointments/add_pet.html -->
+
+{% extends 'appointments/base.html' %}
+
+{% block content %}
+<h2>Ajouter un animal</h2>
+
+<form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit" class="btn btn-primary">Ajouter</button>
+    <a href="{% url 'appointments:appointment_list' %}" class="btn btn-secondary">Annuler</a>
+</form>
+{% endblock %}

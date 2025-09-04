@@ -1,0 +1,99 @@
+{% extends 'appointments/base.html' %}
+
+{% block content %}
+<h2 class="mb-4">Mes Rendez-vous</h2>
+
+<a href="{% url 'appointments:appointment_create' %}" class="btn btn-success mb-3">
+    ➕ Nouveau rendez-vous
+</a>
+
+{% if appointments %}
+    <table class="table table-striped table-hover shadow-sm">
+        <thead class="table-primary">
+            <tr>
+                <th>Animal</th>
+                <th>Type</th>
+                <th>Service</th>
+                <th>Date</th>
+                <th>Heure</th>
+                <th>Téléphone</th>
+                <th>Statut</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for appt in appointments %}
+            <tr>
+                <td>{{ appt.pet_name }}</td>
+                <td>{{ appt.get_pet_type_display }}</td>
+                <td>{{ appt.get_service_display }}</td>
+                <td>{{ appt.date|date:"d/m/Y" }}</td>
+                <td>{{ appt.time|time:"H:i" }}</td>
+                <td>{{ appt.phone }}</td>
+                <td>
+                    {% if appt.status == 'pending' %}
+                        <span class="badge bg-warning text-dark">⏳ En attente</span>
+                    {% elif appt.status == 'confirmed' %}
+                        <span class="badge bg-success">✅ Confirmé</span>
+                    {% elif appt.status == 'rejected' %}
+                        <span class="badge bg-danger">❌ Refusé</span>
+                        {% if appt.admin_notes %}
+                            <div class="mt-1 text-danger small">{{ appt.admin_notes }}</div>
+                        {% endif %}
+                    {% endif %}
+                </td>
+                <td>
+                    <!-- Formulaire de suppression -->
+                    <form method="post" 
+                          action="{% url 'appointments:appointment_delete' appt.pk %}" 
+                          class="d-inline"
+                          onsubmit="return confirm('Confirmer l\'annulation de ce rendez-vous ?');">
+                        {% csrf_token %}
+                        <button type="submit" class="btn btn-danger btn-sm">
+                            🗑️ Annuler
+                        </button>
+                    </form>
+
+                    <!-- Bouton de reprogrammation si refusé -->
+                    {% if appt.status == 'rejected' %}
+                        <div class="mt-1">
+                            <a href="{% url 'appointments:appointment_create' %}?reschedule={{ appt.id }}"
+                               class="btn btn-sm btn-outline-primary">
+                                🔄 Reprogrammer
+                            </a>
+                        </div>
+                    {% endif %}
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+{% else %}
+    <div class="alert alert-info alert-dismissible fade show" role="alert">
+        <h4 class="alert-heading">📅 Aucun rendez-vous</h4>
+        <p>Vous n'avez aucun rendez-vous prévu pour le moment.</p>
+        <hr>
+        <p class="mb-0">
+            <a href="{% url 'appointments:appointment_create' %}" class="btn btn-primary">
+                Prendre un rendez-vous
+            </a>
+        </p>
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Fermer"></button>
+    </div>
+{% endif %}
+<!-- Après la boucle ou en haut -->
+{% if appointments %}
+    {% regroup appointments by pet as pets_grouped %}
+    {% for pet_group in pets_grouped %}
+        <p class="mt-2">
+            <a href="{% url 'appointments:pet_history_pdf' pet_group.grouper.id %}" 
+               class="btn btn-outline-secondary btn-sm">
+                📄 Historique de {{ pet_group.grouper.name }} (PDF)
+            </a>
+        </p>
+    {% endfor %}
+{% endif %}
+
+
+
+{% endblock %}

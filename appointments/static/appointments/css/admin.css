@@ -1,0 +1,299 @@
+/* Import de polices modernes */
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&family=Inter:wght@400;500;600&display=swap');
+
+/* Nouvelles variables de couleurs (thème vétérinaire nature) */
+:root {
+    --primary: #2d6a4f;        /* Vert profond */
+    --primary-light: #40916c;  /* Vert doux */
+    --accent: #e0a800;         /* Or doux */
+    --bg: #f9f9f9;             /* Fond global clair */
+    --bg-light: #ffffff;       /* Blanc pur */
+    --bg-panel: #d8f3dc;       /* Beige vert très clair pour tableaux */
+    --text: #333333;           /* Texte sombre */
+    --border: #c7d9c5;         /* Bordure verte claire */
+    --shadow: rgba(45, 106, 79, 0.1);
+}
+
+/* Base */
+body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Poppins', 'Inter', sans-serif;
+    line-height: 1.6;
+    margin: 0;
+    padding: 0;
+}
+
+/* En-tête admin */
+#header {
+    background: var(--primary);
+    box-shadow: 0 6px 16px var(--shadow);
+    height: 70px;
+    display: flex;
+    align-items: center;
+    padding-left: 30px;
+}
+
+#header .branding a {
+    color: white;
+    font-size: 1.5rem;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    text-decoration: none;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+}
+
+#header .branding a i {
+    color: var(--accent);
+    font-size: 1.8rem;
+}
+
+#header .user-links a {
+    color: rgba(255, 255, 255, 0.85);
+    transition: color 0.2s ease;
+}
+
+#header .user-links a:hover {
+    color: white;
+}
+
+/* Titre principal */
+#content h1 {
+    color: var(--primary);
+    font-weight: 700;
+    font-size: 1.8rem;
+    text-align: center;
+    margin: 25px 0 15px;
+    position: relative;
+}
+
+#content h1::after {
+    content: '';
+    display: block;
+    width: 80px;
+    height: 4px;
+    background: linear-gradient(90deg, var(--primary-light), var(--accent));
+    margin: 10px auto;
+    border-radius: 2px;
+    box-shadow: 0 2px 6px rgba(224, 168, 0, 0.2);
+}
+
+/* Tableaux */
+.module table {
+    width: 100%;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 10px 25px var(--shadow);
+    margin: 25px 0;
+    background: var(--bg-panel);
+    border: 1px solid var(--border);
+    
+}
+
+.module th {
+    background: var(--primary);
+    color: white;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+    font-size: 0.85rem;
+    padding: 14px 12px;
+    text-align: center;
+}
+
+.module td {
+    padding: 14px 12px;
+    border-bottom: 1px solid var(--border);
+    color: var(--text);
+}
+
+.module tr:hover {
+    background-color: #c7e9b0;
+    transform: scale(1.005);
+    transition: all 0.2s ease;
+}
+
+tr:nth-child(even) td {
+    background-color: #edf7ec;
+}
+
+/* Boutons */
+.button,
+input[type="submit"],
+.submit-row input {
+    background: linear-gradient(135deg, var(--primary-light), var(--primary));
+    border: none;
+    color: white;
+    padding: 11px 22px;
+    border-radius: 50px;
+    font-size: 0.9rem;
+    font-weight: 500;
+    box-shadow: 0 4px 12px rgba(64, 145, 108, 0.2);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    cursor: pointer;
+}
+
+.button:hover,
+input[type="submit"]:hover,
+.submit-row input:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(64, 145, 108, 0.3);
+    background: linear-gradient(135deg, #2d6a4f, #1b4332);
+}
+
+/* Panneau d'actions */
+.actions {
+    background: var(--bg-light);
+    padding: 18px;
+    border-radius: 12px;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.05);
+    border: 1px solid var(--border);
+}
+
+.actions select {
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    background: var(--bg-light);
+    color: var(--text);
+    padding: 6px 8px;
+}
+
+/* Filtres et titres */
+.module h2,
+.module caption,
+.inline-group h2 {
+    color: var(--primary);
+    border-bottom: 2px solid var(--accent);
+    padding-bottom: 8px;
+    margin-bottom: 15px;
+    font-size: 1.1rem;
+}
+
+.filter {
+    background: var(--bg-light);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 15px;
+    margin-bottom: 15px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.03);
+}
+
+.filter h3 {
+    color: var(--primary-light);
+    margin: 0 0 10px 0;
+    font-size: 1rem;
+}
+
+/* Champs de formulaire */
+input[type="text"],
+input[type="email"],
+input[type="date"],
+select,
+textarea {
+    width: 100%;
+    padding: 8px 12px;
+    border: 1.5px solid var(--border);
+    border-radius: 8px;
+    background: var(--bg-light);
+    color: var(--text);
+    font-family: 'Poppins', sans-serif;
+    box-sizing: border-box;
+}
+
+input:focus,
+select:focus,
+textarea:focus {
+    border-color: var(--primary-light);
+    box-shadow: 0 0 0 3px rgba(64, 145, 108, 0.1);
+    outline: none;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    #header {
+        padding-left: 15px;
+        height: 60px;
+    }
+
+    #header .branding a {
+        font-size: 1.3rem;
+        gap: 8px;
+    }
+
+    #content h1 {
+        font-size: 1.5rem;
+    }
+
+    .module table {
+        font-size: 0.8rem;
+    }
+
+    .button,
+    input[type="submit"] {
+        padding: 10px 16px;
+        font-size: 0.8rem;
+    }
+}
+
+
+
+/* Agrandir les champs dans les widgets relationnels */
+.related-widget-wrapper ,
+.service{
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap; /* Pour éviter les débordements */
+}
+
+.service,
+.related-widget-wrapper select,
+.related-widget-wrapper input[type="text"] {
+    min-height: 48px !important;
+    padding: 12px 16px !important;
+    font-size: 1rem !important;
+    line-height: 1.5 !important;
+}
+
+/* Ajuster les boutons dans le wrapper pour qu'ils soient en harmonie */
+.related-widget-wrapper-link, .service {
+    display: flex;
+    align-items: center;
+    height: 48px;
+    margin: 0;
+}
+
+.related-widget-wrapper-link a {
+    height: 48px !important;
+    width: 48px !important;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    background: var(--primary-light) !important;
+    border: none !important;
+    box-shadow: 0 2px 6px rgba(64, 145, 108, 0.3);
+    transition: all 0.2s ease;
+}
+
+.related-widget-wrapper-link a:hover {
+    background: var(--primary) !important;
+    transform: translateY(-1px);
+}
+
+/* Icônes dans les boutons */
+.related-widget-wrapper-link a img {
+    filter: brightness(0) invert(1);
+    width: 18px;
+    height: 18px;
+}
+
+/* Pour les champs ManyToMany (listes multiples) */
+.m2m-select {
+    min-height: 120px !important;
+    font-size: 1rem !important;
+}

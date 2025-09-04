@@ -1,0 +1,16 @@
+<!-- appointments/templates/admin/base_site.html -->
+
+{% extends 'admin/base.html' %}
+
+{% block title %}Admin - Clinique Vétérinaire{% endblock %}
+
+{% block branding %}
+<h1 id="site-name">
+    <a href="{% url 'admin:index' %}" style="text-decoration: none; color: #0056b3; display: flex; align-items: center; gap: 10px;">
+        <i class="fas fa-paw"></i>
+        🐾 Clinique Vétérinaire
+    </a>
+</h1>
+{% endblock %}
+
+{% block nav-global %}{% endblock %}
