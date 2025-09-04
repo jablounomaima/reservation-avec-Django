@@ -1,0 +1,57 @@
+<!-- templates/admin/appointments/pet/change_form.html -->
+
+{% extends "admin/change_form.html" %}
+
+{% block after_field_sets %}
+    {% if historique_pdf %}
+        <div class="module aligned">
+            <h2><i class="fas fa-file-pdf"></i> 🖨️ Export PDF</h2>
+            <div class="form-row">
+                <div class="flex-container">
+                    {{ historique_pdf|safe }}
+                </div>
+            </div>
+        </div>
+
+        <style>
+            .flex-container {
+                display: flex;
+                justify-content: flex-start;
+                margin: 10px 0;
+            }
+
+            .flex-container a.button {
+                background: linear-gradient(135deg, #0056b3, #003d82);
+                color: white !important;
+                padding: 10px 20px;
+                text-decoration: none;
+                border-radius: 6px;
+                font-weight: 600;
+                box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+                transition: all 0.3s ease;
+                display: inline-flex;
+                align-items: center;
+                gap: 8px;
+                border: none;
+            }
+
+            .flex-container a.button:hover {
+                background: #004085;
+                transform: translateY(-2px);
+                box-shadow: 0 6px 12px rgba(0, 90, 180, 0.2);
+                text-decoration: none;
+            }
+
+            .module h2 {
+                color: #0056b3;
+                border-bottom: 2px solid #007bff;
+                padding-bottom: 8px;
+                font-size: 1.2em;
+            }
+
+            .module h2 i {
+                margin-right: 8px;
+            }
+        </style>
+    {% endif %}
+{% endblock %}

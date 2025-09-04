@@ -52,15 +52,44 @@ class PetAdmin(admin.ModelAdmin):
     change_form_template = 'admin/appointments/pet/change_form.html'
 
 # --- Admin pour Appointment ---
+# appointments/admin.py
+
 @admin.register(Appointment)
 class AppointmentAdmin(admin.ModelAdmin):
-    list_display = ('pet', 'service', 'date', 'time', 'status', 'user', 'created_at')
+    list_display = (
+        'pet',
+        'service',
+        'date',
+        'time',
+        'display_status',      # statut coloré
+        'phone',                # ✅ Ajouté
+        'user',
+        'short_notes',          # ✅ Remarques (abrégées)
+        'short_admin_notes',    # ✅ Notes admin
+        'created_at'
+    )
     list_filter = ('status', 'date', 'service', 'pet__species', 'pet__owner')
-    search_fields = ('pet__name', 'user__username', 'pet__owner__username')
+    search_fields = ('pet__name', 'user__username', 'phone')
     date_hierarchy = 'date'
     ordering = ('-date', '-created_at')
-    readonly_fields = ('created_at', 'updated_at')
 
+    # Pour afficher les notes en court
+    def short_notes(self, obj):
+        return obj.notes[:50] + "..." if obj.notes and len(obj.notes) > 50 else obj.notes or "-"
+    short_notes.short_description = 'Remarques'
+
+    def short_admin_notes(self, obj):
+        return obj.admin_notes[:50] + "..." if obj.admin_notes and len(obj.admin_notes) > 50 else obj.admin_notes or "-"
+    short_admin_notes.short_description = 'Notes admin'
+
+    def display_status(self, obj):
+        if obj.status == 'confirmed':
+            return format_html('<span style="color: green; font-weight: bold;">✅ Confirmé</span>')
+        elif obj.status == 'rejected':
+            return format_html('<span style="color: red; font-weight: bold;">❌ Refusé</span>')
+        else:
+            return format_html('<span style="color: orange; font-weight: bold;">⏳ En attente</span>')
+    display_status.short_description = 'Statut'
     # Actions rapides
     actions = ['mark_as_confirmed', 'mark_as_rejected', 'mark_as_pending']
 

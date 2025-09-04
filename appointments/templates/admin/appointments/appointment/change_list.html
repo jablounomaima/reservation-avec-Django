@@ -1,0 +1,64 @@
+<!-- templates/admin/appointments/appointment/change_list.html -->
+
+{% extends "admin/change_list.html" %}
+{% load static %}
+
+{% block extrastyle %}
+  {{ block.super }}
+  <!-- Ton CSS personnalisé -->
+  <link rel="stylesheet" href="{% static 'appointments/css/admin_style.css' %}" />
+  <!-- Font Awesome pour les icônes -->
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+{% endblock %}
+
+{% block result_list %}
+  {% if result_headers %}
+    <div class="responsive-table-wrapper">
+      <table id="result_list" class="table table-responsive">
+        <thead>
+          <tr>
+            {% for header in result_headers %}
+              <th>{{ header.text|safe }}</th>
+            {% endfor %}
+          </tr>
+        </thead>
+        <tbody>
+          {% for result in results %}
+            <tr>
+              {% for item in result %}
+                <td class="{{ item.classes }}">
+                  {% if 'status' in item.classes %}
+                    <!-- Affichage coloré du statut -->
+                    {% if 'En attente' in item.text %}
+                      <span class="badge status-pending"><i class="fas fa-clock"></i> En attente</span>
+                    {% elif 'Confirmé' in item.text %}
+                      <span class="badge status-confirmed"><i class="fas fa-check-circle"></i> Confirmé</span>
+                    {% elif 'Refusé' in item.text %}
+                      <span class="badge status-rejected"><i class="fas fa-times-circle"></i> Refusé</span>
+                    {% else %}
+                      {{ item.text|safe }}
+                    {% endif %}
+                  {% elif 'pet__name' in item.classes or 'pet' in item.classes %}
+                    <strong><i class="fas fa-paw text-primary"></i> {{ item.text|safe }}</strong>
+                  {% elif 'date' in item.classes %}
+                    <span class="text-muted"><i class="far fa-calendar-alt"></i> {{ item.text|safe }}</span>
+                  {% elif 'time' in item.classes %}
+                    <span class="text-info"><i class="far fa-clock"></i> {{ item.text|safe }}</span>
+                  {% elif 'user' in item.classes %}
+                    <span class="text-success"><i class="fas fa-user"></i> {{ item.text|safe }}</span>
+                  {% else %}
+                    {{ item.text|safe }}
+                  {% endif %}
+                </td>
+              {% endfor %}
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  {% endif %}
+{% endblock %}
+
+{% block pagination %}
+  {{ block.super }}
+{% endblock %}

@@ -1,0 +1,84 @@
+/* Style pour la liste des RDV dans l'admin */
+
+#result_list {
+    background: white;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
+    margin: 20px 0;
+    font-size: 0.95rem;
+    border-collapse: separate;
+}
+
+#result_list th {
+    background: linear-gradient(135deg, #007bff, #0056b3);
+    color: white;
+    text-align: center;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    padding: 14px 10px;
+}
+
+#result_list td {
+    padding: 12px 10px;
+    border-bottom: 1px solid #f0f0f0;
+}
+
+#result_list tr:hover {
+    background-color: #f8f9ff;
+    transition: background 0.2s ease;
+}
+
+/* Badges colorés */
+.badge {
+    padding: 6px 12px;
+    border-radius: 50px;
+    font-size: 0.85em;
+    font-weight: 600;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.status-pending {
+    background: linear-gradient(135deg, #ffc107, #e0a800);
+    color: #1d3557;
+}
+
+.status-confirmed {
+    background: linear-gradient(135deg, #28a745, #1e7e34);
+    color: white;
+}
+
+.status-rejected {
+    background: linear-gradient(135deg, #dc3545, #c82333);
+    color: white;
+}
+
+/* Icônes */
+.text-primary { color: #007bff !important; }
+.text-info { color: #17a2b8 !important; }
+.text-success { color: #28a745 !important; }
+.text-muted { color: #6c757d !important; }
+
+/* Responsive */
+.responsive-table-wrapper {
+    overflow-x: auto;
+    margin: 0 15px;
+}
+
+/* Pagination */
+.paginator {
+    margin: 20px 15px;
+    text-align: center;
+    font-size: 0.9rem;
+}
+
+.paginator .this-page {
+    background: #007bff;
+    color: white;
+    padding: 5px 10px;
+    border-radius: 5px;
+    font-weight: 500;
+}
