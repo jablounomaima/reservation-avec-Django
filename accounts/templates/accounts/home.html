@@ -1,0 +1,11 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Accueil</title>
+</head>
+<body>
+    <h2>Bienvenue, {{ user.username }} !</h2>
+    <p>Email : {{ user.email }}</p>
+    <p><a href="{% url 'logout' %}">Se déconnecter</a></p>
+</body>
+</html>
