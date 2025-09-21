@@ -12,6 +12,8 @@ https://docs.djangoproject.com/en/5.2/ref/settings/
 
 from pathlib import Path
 
+from httpcore import MockBackend
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -19,8 +21,17 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 LOGIN_URL = 'appointments:login'
 
 # Page de redirection après login (optionnel)
-LOGIN_REDIRECT_URL = 'appointments:appointment_list'
+#LOGIN_REDIRECT_URL = 'appointments:appointment_list'
+LOGIN_REDIRECT_URL = 'appointments:home'
+LOGOUT_REDIRECT_URL = '/'
 
+ACCOUNT_USERNAME_REQUIRED = False
+ACCOUNT_EMAIL_REQUIRED = True
+ACCOUNT_EMAIL_VERIFICATION = 'none'  # For testing
+ACCOUNT_AUTHENTICATION_METHOD = 'email'
+SOCIALACCOUNT_AUTO_SIGNUP = True  # Auto-create user on first Google login
+# Un email = un seul compte
+ACCOUNT_UNIQUE_EMAIL = True
 # Pour envoyer les emails dans la console (utile en développement)
 
 
@@ -29,9 +40,12 @@ EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
-EMAIL_HOST_USER = 'sousouaa118@gmail.com'          # Remplace par ton email
-EMAIL_HOST_PASSWORD = 'hkwf ttkl sfad wzwy'    # Utilise un "App Password" si 2FA activé
+EMAIL_HOST_USER = 'jablounomaima2@gmail.com'
+EMAIL_HOST_PASSWORD = 'swcj yemd upjl tgtj'    # Utilise un "App Password" si 2FA activé
 DEFAULT_FROM_EMAIL = 'noreply@tonsite.com'
+
+
+
 
 
 
@@ -59,11 +73,27 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'appointments',  # <--- Ajoute cette ligne
     'django_extensions',
-    'axes',
+    'django.contrib.sites', # pour ajouter framewark sites qui permet a ton application de gérer plusieurs sites web a partir d'un seul base de donne
+    
+
+
+     # Allauth
+    'allauth',
+    'allauth.account',
+    'allauth.socialaccount',
+   
+    'allauth.socialaccount.providers.google',  # Pour Google login
+
+
+     # Required for allauth
+     'axes',
+    
 ]
 
-
-
+AUTHENTICATION_BACKENDS = [
+    'appointments.authentication.EmailBackend',  # ← Backend par email # Connexion locale
+    'allauth.account.auth_backends.AuthenticationBackend',  # Connexion sociale
+]
 
 # settings.py
 
@@ -78,7 +108,22 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+     
+    # ✅ Middleware obligatoire pour django-allauth
+    'allauth.account.middleware.AccountMiddleware',  # 🔥 À ajouter ici
+    'django.contrib.messages.middleware.MessageMiddleware',
+    'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'allauth.account.middleware.AccountMiddleware',
+    'axes.middleware.AxesMiddleware',
+    
+
+
+    
 ]
+
+
+
+
 
 ROOT_URLCONF = 'vet_reservation.urls'
 
@@ -159,3 +204,34 @@ STATIC_ROOT = BASE_DIR / 'collected_static'  # Utilisé avec collectstatic
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+
+
+SOCIALACCOUNT_PROVIDERS = {
+    'google': {
+        'SCOPE': [
+            'profile',
+            'email',
+        ],
+        'AUTH_PARAMS': {
+            'access_type': 'online',
+        }
+    }
+}
+ACCOUNT_FORMS = {
+    'login': 'appointments.forms.CustomLoginForm',
+}
+
+
+class EmailBackend(MockBackend):
+    """
+    Permet de se connecter avec l'email au lieu du username
+    """
+    def authenticate(self, request, username=None, password=None, **kwargs):
+        try:
+            user = user.objects.get(email=username)
+        except user.DoesNotExist:
+            return None
+        if user.check_password(password) and self.user_can_authenticate(user):
+            return user
+        return None

@@ -1,0 +1,16 @@
+<!-- templates/account/logout.html -->
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Déconnexion — Clinique Vétérinaire</title>
+    <link rel="stylesheet" type="text/css" href="{% static 'css/auth.css' %}">
+</head>
+<body>
+    <div class="container">
+        <h2>👋 Vous êtes déconnecté(e)</h2>
+        <p>Merci d’avoir utilisé notre plateforme de réservation vétérinaire.</p>
+        <a href="{% url 'account_login' %}" class="button">Se reconnecter</a>
+    </div>
+</body>
+</html>

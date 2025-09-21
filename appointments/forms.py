@@ -1,11 +1,13 @@
 # appointments/forms.py
-from django.utils import timezone
+
 from datetime import time
 from django import forms
 from django.contrib.auth.forms import UserCreationForm
 from django.utils import timezone
 from .models import Appointment, Pet  # ✅ Importe Pet
 from django.contrib.auth.models import User
+from allauth.account.forms import LoginForm  # Pour personnaliser le login
+from .models import Appointment, Pet
 import re
 from datetime import time  # Pour les TIME_CHOICES
 # Créneaux horaires disponibles
@@ -17,7 +19,8 @@ from django.utils import timezone
 from .models import Appointment, Pet
 import re
 
-# Créneaux horaires
+
+# === Créneaux horaires disponibles ===
 TIME_CHOICES = [
     (time(9, 0), '09:00'),
     (time(9, 30), '09:30'),
@@ -33,6 +36,19 @@ TIME_CHOICES = [
     (time(16, 30), '16:30'),
 ]
 
+
+
+
+# appointments/forms.py
+from allauth.account.forms import LoginForm
+
+class CustomLoginForm(LoginForm):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['login'].label = 'Adresse e-mail'
+        self.fields['login'].widget.attrs.update({
+            'placeholder': 'votre@email.com',
+        })
 class AppointmentForm(forms.ModelForm):
     time = forms.ChoiceField(
         choices=[(t.strftime('%H:%M'), display) for t, display in TIME_CHOICES],
@@ -93,7 +109,17 @@ class AppointmentForm(forms.ModelForm):
         return cleaned_data
 
 
-# Formulaire d'inscription
+# === Formulaire : Ajout/édition d'animal ===
+class PetForm(forms.ModelForm):
+    class Meta:
+        model = Pet
+        fields = ['name', 'species', 'breed', 'birth_date']
+        widgets = {
+            'birth_date': forms.DateInput(attrs={'type': 'date'}),
+        }
+
+
+# === Formulaire : Inscription utilisateur ===
 class CustomUserCreationForm(UserCreationForm):
     email = forms.EmailField(
         label="Adresse email",

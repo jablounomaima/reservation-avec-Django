@@ -1,0 +1,13 @@
+<!-- templates/account/logout.html -->
+{% extends "account/base2.html" %}
+
+{% block content %}
+<h2>Déconnexion</h2>
+<p>Êtes-vous sûr(e) de vouloir vous déconnecter ?</p>
+
+<form method="post">
+    {% csrf_token %}
+    <button type="submit" class="btn btn-danger">Oui, me déconnecter</button>
+    <a href="/" class="btn btn-secondary">Annuler</a>
+</form>
+{% endblock %}

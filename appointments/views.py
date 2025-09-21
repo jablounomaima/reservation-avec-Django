@@ -4,12 +4,15 @@ from datetime import time
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
-from django.contrib.auth import login, logout, authenticate
+from django.contrib.auth import login as auth_login, logout as auth_logout, authenticate
 from django.contrib.auth.forms import AuthenticationForm
 from django.core.mail import send_mail
+from django.http import HttpResponse, Http404  # Ajouté Http404
+from django.template.loader import render_to_string
 from django.utils import timezone
-from .models import Appointment
-from .forms import AppointmentForm, CustomUserCreationForm
+from weasyprint import HTML
+from .models import Appointment, Pet
+from .forms import AppointmentForm, CustomUserCreationForm, CustomLoginForm
 
 # appointments/views.py
 
@@ -20,8 +23,11 @@ from django.contrib.auth.decorators import login_required
 import weasyprint
 from .models import Pet
 # --- VUES PRINCIPALES ---
+
 def home(request):
     return render(request, 'appointments/home.html')
+
+
 @login_required
 def appointment_list(request):
     appointments = Appointment.objects.filter(user=request.user).order_by('-date', 'time')
@@ -46,21 +52,26 @@ def appointment_create(request):
             return redirect('appointments:appointment_list')
 
     if request.method == 'POST':
-        form = AppointmentForm(request.POST, user=request.user)  # ✅ Passe user
+        form = AppointmentForm(request.POST, user=request.user)
         if form.is_valid():
             appointment = form.save(commit=False)
             appointment.user = request.user
             appointment.status = 'pending'
 
+            # Vérifier la disponibilité du créneau
             if Appointment.objects.filter(date=appointment.date, time=appointment.time).exists():
                 form.add_error(None, "Ce créneau est déjà réservé.")
             else:
                 appointment.save()
 
-                # Envoi email
+                # Envoi d'email
                 send_mail(
                     subject=f"RDV en attente - {appointment.pet.name}",
-                    message=f"Bonjour {request.user.username},\n\nVotre demande de rendez-vous pour {appointment.pet.name} a été envoyée.",
+                    message=(
+                        f"Bonjour {request.user.username},\n\n"
+                        f"Votre demande de rendez-vous pour {appointment.pet.name} a été envoyée.\n"
+                        "En attente de validation par la clinique."
+                    ),
                     recipient_list=[request.user.email],
                     from_email='no-reply@veterinaire.local',
                     fail_silently=False,
@@ -80,12 +91,14 @@ def appointment_create(request):
                 'phone': original_appointment.phone,
                 'notes': original_appointment.notes,
             }
-        form = AppointmentForm(initial=initial_data, user=request.user)  # ✅ Passe user
+        form = AppointmentForm(initial=initial_data, user=request.user)
 
     return render(request, 'appointments/create.html', {
         'form': form,
         'original_appointment': original_appointment
     })
+
+
 @login_required
 def appointment_delete(request, pk):
     appointment = get_object_or_404(Appointment, pk=pk, user=request.user)
@@ -103,69 +116,68 @@ def register(request):
         form = CustomUserCreationForm(request.POST)
         if form.is_valid():
             user = form.save()
-            username = form.cleaned_data.get('username')
+            email = form.cleaned_data.get('email')  # On récupère l'email
             password = form.cleaned_data.get('password1')
-            user = authenticate(username=username, password=password)
-            login(request, user)
-            messages.success(request, f"Bienvenue {username} ! Votre compte a été créé.")
-            return redirect('appointments:appointment_list')
+
+            # Authentification via email
+            user = authenticate(request, username=email, password=password)
+            if user is not None:
+                auth_login(request, user)
+                messages.success(request, f"Bienvenue {email} ! Votre compte a été créé.")
+                return redirect('appointments:home')
+            else:
+                messages.error(request, "Erreur lors de l’authentification.")
+                return redirect('appointments:login')
     else:
         form = CustomUserCreationForm()
     return render(request, 'appointments/register.html', {'form': form})
 
-
+# views.py
+# views.py
 def user_login(request):
     if request.method == 'POST':
-        form = AuthenticationForm(request, data=request.POST)
+        form = CustomLoginForm(request, request.POST)  # ✅ Ordre correct : request, POST
         if form.is_valid():
-            username = form.cleaned_data.get('username')
+            email = form.cleaned_data.get('login')
             password = form.cleaned_data.get('password')
-            user = authenticate(username=username, password=password)
+            user = authenticate(request, username=email, password=password)
             if user is not None:
                 login(request, user)
-                return redirect('appointments:home')  # ← Redirige vers home
+                messages.success(request, f"Bienvenue {user.email} !")
+                return redirect('appointments:home')
             else:
-                messages.error(request, "Identifiants invalides.")
+                messages.error(request, "Email ou mot de passe incorrect.")
+        else:
+            messages.error(request, "Formulaire invalide.")
     else:
-        form = AuthenticationForm()
+        form = CustomLoginForm()  # Pas d'arguments en GET
     return render(request, 'appointments/login.html', {'form': form})
 
 
 def logout_view(request):
-    logout(request)
+    auth_logout(request)
     messages.info(request, "Vous avez été déconnecté.")
     return redirect('appointments:login')
 
 
-# --- UTILITAIRE ---
+# --- GESTION DES ANIMAUX ---
 
-def get_available_slots():
-    """Retourne une liste de 5 créneaux disponibles"""
-    from datetime import timedelta
-    from django.utils import timezone
-
-    today = timezone.now().date()
-    available = []
-
-    for days in range(1, 8):  # Prochains 7 jours
-        current_date = today + timedelta(days=days)
-        for t in [time(9,0), time(9,30), time(10,0), time(10,30),
-                  time(11,0), time(11,30), time(14,0), time(14,30),
-                  time(15,0), time(15,30), time(16,0), time(16,30)]:
-            if not Appointment.objects.filter(date=current_date, time=t).exists():
-                available.append({
-                    'date': current_date,
-                    'time': t,
-                    'display': f"{current_date.strftime('%d/%m')} à {t.strftime('%H:%M')}"
-                })
-    return available[:5]
+@login_required
+def add_pet(request):
+    if request.method == 'POST':
+        form = PetForm(request.POST)
+        if form.is_valid():
+            pet = form.save(commit=False)
+            pet.owner = request.user
+            pet.save()
+            messages.success(request, f"Animal '{pet.name}' ajouté avec succès !")
+            return redirect('appointments:appointment_create')
+    else:
+        form = PetForm()
+    return render(request, 'appointments/add_pet.html', {'form': form})
 
 
-
-
-# appointments/views.py
-
-
+# --- PDF HISTORIQUE ---
 
 @login_required
 def pet_history_pdf(request, pet_id):
@@ -174,9 +186,9 @@ def pet_history_pdf(request, pet_id):
     # - L'utilisateur est staff/superuser
     try:
         if request.user.is_staff:
-            pet = Pet.objects.get(id=pet_id)  # Staff voit tous les animaux
+            pet = Pet.objects.get(id=pet_id)
         else:
-            pet = Pet.objects.get(id=pet_id, owner=request.user)  # User normal → seulement ses animaux
+            pet = Pet.objects.get(id=pet_id, owner=request.user)
     except Pet.DoesNotExist:
         raise Http404("Animal non trouvé.")
 
@@ -190,7 +202,7 @@ def pet_history_pdf(request, pet_id):
     response = HttpResponse(content_type='application/pdf')
     response['Content-Disposition'] = f'attachment; filename="historique_{pet.name}.pdf"'
 
-    weasyprint.HTML(string=html).write_pdf(response)
+    HTML(string=html).write_pdf(response)
     return response
 
 

@@ -20,6 +20,7 @@ from django.contrib.auth import views as auth_views
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include('appointments.urls')),
+    path('accounts', include('allauth.urls')),  # AllAuth handles login, logout, social
 
 
 
