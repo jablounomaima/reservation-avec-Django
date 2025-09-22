@@ -1,4 +1,6 @@
 {% extends 'appointments/base.html' %}
+{% load static %}
+
 
 {% block content %}
 <!-- Bannière principale -->
@@ -41,22 +43,52 @@
         </div>
     </div>
 </section>
-<h1>Bienvenue sur notre site</h1>
 
-<p>Découvrez notre service en action :</p>
+<!-- Galerie d'images horizontale -->
+<section class="py-5">
+    <div class="container">
+        <h2 class="text-center mb-4">Nos petits patients heureux 🐶🐱</h2>
+        <div class="row g-4 text-center">
+            <div class="col-md-3 col-sm-6">
+                <img src="{% static 'images/pets/dog2.jpg' %}" class="gallery-img rounded shadow-sm" alt="Chat mignon">
+            </div>
+            <div class="col-md-3 col-sm-6">
+                <img src="{% static 'images/vet5.jpg'%}" class="gallery-img rounded shadow-sm" alt="Chien heureux">
+            </div>
+            <div class="col-md-3 col-sm-6">
+                <img src="{% static 'images/pets/cat1.jpg' %}" class="gallery-img rounded shadow-sm" alt="Chat joueur">
+            </div>
+            <div class="col-md-3 col-sm-6">
+                <img src="https://placedog.net/401/300" class="gallery-img rounded shadow-sm" alt="Petit chiot">
+            </div>
+        </div>
+    </div>
+</section>
+
+<style>
+/* Style personnalisé pour la galerie */
+.gallery-img {
+    width: 100%;          /* occupe toute la largeur de la colonne */
+    height: 220px;        /* fixe la hauteur */
+    object-fit: cover;    /* garde le recadrage joli sans déformation */
+    transition: transform 0.3s ease-in-out;
+}
+.gallery-img:hover {
+    transform: scale(1.05); /* petit zoom au survol */
+}
+</style>
 
 <!-- Vidéo Facebook intégrée -->
-<div style="max-width: 500px; margin: 20px auto;">
+<div style="max-width: 700px; margin: 40px auto;">
     <iframe 
-        src="https://www.facebook.com/plugins/video.php?href=https%3A%2F%2Fwww.facebook.com%2F61552681781218%2Fvideos%2F722188107493622&width=500" 
-        width="500" 
-        height="281" 
+        src="https://www.facebook.com/plugins/video.php?href=https%3A%2F%2Fwww.facebook.com%2F61552681781218%2Fvideos%2F722188107493622&width=700" 
+        width="700" 
+        height="393" 
         style="border:none; overflow:hidden" 
         scrolling="no" 
         frameborder="0" 
         allowfullscreen="true"
-        allow="autoplay; clipboard-write; encrypted-media; picture-in-picture" 
-        allowFullScreen>
+        allow="autoplay; clipboard-write; encrypted-media; picture-in-picture">
     </iframe>
 </div>
 
@@ -80,7 +112,7 @@
 <footer class="bg-dark text-white text-center py-4">
     <div class="container">
         <p>© 2025 Clinique Vétérinaire. Tous droits réservés.</p>
-        <p>Contact : contact@clinique-veterinaire.local | 📞 +212 6 12 34 56 78</p>
+        <p>Contact : contact@clinique-veterinaire.local | 📞 +216 27 806 800</p>
     </div>
 </footer>
 

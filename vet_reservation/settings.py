@@ -25,7 +25,7 @@ LOGIN_URL = 'appointments:login'
 LOGIN_REDIRECT_URL = 'appointments:home'
 LOGOUT_REDIRECT_URL = '/'
 
-ACCOUNT_USERNAME_REQUIRED = False
+ACCOUNT_USERNAME_REQUIRED = True
 ACCOUNT_EMAIL_REQUIRED = True
 ACCOUNT_EMAIL_VERIFICATION = 'none'  # For testing
 ACCOUNT_AUTHENTICATION_METHOD = 'email'
@@ -220,6 +220,8 @@ SOCIALACCOUNT_PROVIDERS = {
 }
 ACCOUNT_FORMS = {
     'login': 'appointments.forms.CustomLoginForm',
+    'signup': 'appointments.forms.CustomSignupForm',  # ← Clé importante
+    
 }
 
 

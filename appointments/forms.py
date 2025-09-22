@@ -1,5 +1,7 @@
 # appointments/forms.py
-
+# appointments/forms.py
+from allauth.account.forms import SignupForm
+from django import forms
 from datetime import time
 from django import forms
 from django.contrib.auth.forms import UserCreationForm
@@ -140,3 +142,28 @@ class PetForm(forms.ModelForm):
         widgets = {
             'birth_date': forms.DateInput(attrs={'type': 'date'}),
         }        
+
+
+
+
+
+# appointments/forms.py
+from allauth.account.forms import SignupForm
+from django import forms
+
+
+class CustomSignupForm(SignupForm):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+        # ✅ Vérifie que le champ existe avant de le modifier
+        if 'username' in self.fields:
+            self.fields['username'].label = 'Nom d’utilisateur'
+            self.fields['username'].widget.attrs.update({
+                'placeholder': 'Choisissez un nom d’utilisateur'
+            })
+
+        # Optionnel : personnalise les autres champs
+        self.fields['email'].label = 'Adresse email'
+        self.fields['password1'].label = 'Mot de passe'
+        self.fields['password2'].label = 'Confirmer le mot de passe'

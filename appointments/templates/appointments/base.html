@@ -4,67 +4,64 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Clinique Vétérinaire - Réservation</title>
+
     <!-- Bootstrap CSS -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet"
-          integrity="sha384-9ndCyUaIbzAi2FUVXJi0CjmCapMvO3G7B0B5B0B5B5B5B5B5B5B5B5B5B5B5B5B" crossorigin="anonymous">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
 
-          {% load static %}
-          <link rel="stylesheet" href="{% static 'appointments/css/style.css' %}">   
-             <!-- Police Google Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <!-- Font Awesome (icônes) -->
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    {% load static %}
     <!-- CSS personnalisé -->
-    
-    
-    <link rel="stylesheet" href="/static/appointments/css/admin.css">   
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <link rel="stylesheet" href="{% static 'appointments/css/style.css' %}">
+    <link rel="stylesheet" href="{% static 'appointments/css/admin.css' %}">
+
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+    <!-- Font Awesome (icônes) -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
 </head>
-<body class="bg-light">
+<body class="bg-light" style="font-family: 'Poppins', sans-serif;">
 
-
-
-
-
-    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary shadow-sm">
         <div class="container">
-            <a class="navbar-brand" href="{% url 'appointments:appointment_list' %}">
-                
-                
-    <header>
-        <div class="logo-container">
-            <img src="{% static 'images/Clinique.jpg' %}" alt="Logo CAPETS Clinique Vétérinaire" style="width: 100px; height: 1000;">
-        </div>
-       
-     
-    </header>
-
-
-                
-                
-                🐾 Clinique Vétérinaire
+            <a class="navbar-brand d-flex align-items-center" href="{% url 'appointments:appointment_list' %}">
+                <img src="{% static 'images/Clinique.jpg' %}" 
+                     alt="Logo Clinique Vétérinaire" 
+                     style="width: 60px; height: auto;" 
+                     class="me-2 rounded-circle">
+                <span>🐾 Clinique Vétérinaire</span>
             </a>
-            <div class="navbar-nav ms-auto">
-                {% if user.is_authenticated %}
-                    <span class="nav-link">Bonjour, <strong>{{ user.username }}</strong></span>
-                    <a class="nav-link" href="{% url 'appointments:appointment_create' %}">➕ Nouveau RDV</a>
-                    <a class="nav-link" href="{% url 'appointments:appointment_list' %}">➕ liste de RDV</a>
 
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" 
+                    aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
 
-                    {% if user.is_staff %}
-                        <a class="nav-link" href="{% url 'admin:index' %}">🛠️ Admin</a>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <div class="navbar-nav ms-auto">
+                    {% if user.is_authenticated %}
+                        <span class="nav-link disabled">👋 Bonjour, <strong>{{ user.username }}</strong></span>
+                        <a class="nav-link" href="{% url 'appointments:home' %}"><i class="fas fa-home"></i> Home</a>
+                        <a class="nav-link" href="{% url 'appointments:appointment_create' %}"><i class="fas fa-calendar-plus"></i> Nouveau RDV</a>
+                        <a class="nav-link" href="{% url 'appointments:appointment_list' %}"><i class="fas fa-list"></i> Liste RDV</a>
+
+                        {% if user.is_staff %}
+                            <a class="nav-link" href="{% url 'admin:index' %}"><i class="fas fa-tools"></i> Admin</a>
+                        {% endif %}
+                        <a class="nav-link text-danger" href="{% url 'account_logout' %}"><i class="fas fa-sign-out-alt"></i> Déconnexion</a>
+                    {% else %}
+                    <a class="nav-link" href="{% url 'appointments:home' %}"><i class="fas fa-sign-in-alt"></i> Home</a>
+                        <a class="nav-link" href="{% url 'account_login' %}"><i class="fas fa-sign-in-alt"></i> Connexion</a>
+                        <a class="nav-link" href="{% url 'account_signup' %}"><i class="fas fa-user-plus"></i> Inscription</a>
                     {% endif %}
-                    <a class="nav-link" href="{% url 'account_logout' %}">🚪 Déconnexion</a>
-                {% else %}
-                    <a class="nav-link" href="{% url 'account_login' %}">🔑 Connexion</a>
-                    <a class="nav-link" href="{% url 'account_signup' %}">📝 Inscription</a>
-                {% endif %}
+                </div>
             </div>
         </div>
     </nav>
 
-    <div class="container mt-4">
-        <!-- Messages d'alerte -->
+    <!-- Contenu principal -->
+    <main class="container mt-4">
+        <!-- Messages d’alerte -->
         {% if messages %}
             {% for message in messages %}
                 <div class="alert alert-{{ message.tags|default:"info" }} alert-dismissible fade show" role="alert">
@@ -77,10 +74,9 @@
         <!-- Contenu des pages enfants -->
         {% block content %}
         {% endblock %}
-    </div>
+    </main>
 
-    <!-- Bootstrap JS Bundle (inclut Popper) -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"
-            integrity="sha384-C6RzWNLxf0Dd/9JvC6eRjRfRzB5B5B5B5B5B5B5B5B5B5B5B5B5B5B5B5B5B5B5B5B" crossorigin="anonymous"></script>
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

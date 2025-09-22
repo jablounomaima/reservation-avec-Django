@@ -1,11 +1,9 @@
 <!-- templates/account/login.html -->
-{% extends 'account/base2.html' %}
+{% extends 'appointments/base.html' %}
 {% load static %}
 
 {% block content %}
 <style>
-        
-        
     .container2 {
         max-width: 500px;
         margin: 50px auto;
@@ -67,23 +65,71 @@
         color: #d63031;
         font-size: 14px;
         margin: 5px 0;
+        list-style: none;
+        padding-left: 0;
     }
-    .success {
+    .errorlist li:before {
+        content: "❌ ";
+    }
+    .alert-success {
         color: #00b894;
         font-weight: bold;
+        text-align: center;
+        margin-bottom: 15px;
     }
-    </style>
+</style>
 
 <div class="container2">
-<h2>Connexion</h2>
-<form method="post">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <button type="submit">Se connecter</button>
-</form>
+    <h2>Connexion</h2>
 
-<p><a href="{% url 'account_reset_password' %}">Mot de passe oublié ?</a></p>
-<p>Pas encore inscrit ? <a href="{% url 'account_signup' %}">Créer un compte</a></p>
+    <!-- Messages Django -->
+    {% if messages %}
+        {% for message in messages %}
+            <div class="alert-success">{{ message }}</div>
+        {% endfor %}
+    {% endif %}
+
+    <!-- Formulaire -->
+    <form method="post">
+        {% csrf_token %}
+
+        {% if form.non_field_errors %}
+            <div class="errorlist">
+                {% for error in form.non_field_errors %}
+                    {{ error }}
+                {% endfor %}
+            </div>
+        {% endif %}
+
+        <div class="form-group">
+            <label for="{{ form.login.id_for_label }}">Adresse e-mail</label>
+            {{ form.login }}
+            {% if form.login.errors %}
+                <div class="errorlist">
+                    {% for error in form.login.errors %}
+                        {{ error }}
+                    {% endfor %}
+                </div>
+            {% endif %}
+        </div>
+
+        <div class="form-group">
+            <label for="{{ form.password.id_for_label }}">Mot de passe</label>
+            {{ form.password }}
+            {% if form.password.errors %}
+                <div class="errorlist">
+                    {% for error in form.password.errors %}
+                        {{ error }}
+                    {% endfor %}
+                </div>
+            {% endif %}
+        </div>
+
+        <button type="submit">Se connecter</button>
+    </form>
+
+    <p><a href="{% url 'account_reset_password' %}">Mot de passe oublié ?</a></p>
+    <p class="login-link">Pas encore inscrit ? <a href="{% url 'account_signup' %}">Créer un compte</a></p>
 </div>
 
 {% endblock %}
