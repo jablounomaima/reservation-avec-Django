@@ -10,7 +10,7 @@ from .models import Pet, Appointment
 class AppointmentInline(admin.TabularInline):
     model = Appointment
     extra = 0
-    readonly_fields = ('created_at', 'updated_at')
+    readonly_fields = ('created_at', 'updated_at', 'phone')
     fields = ('service', 'date', 'time', 'status', 'notes', 'admin_notes', 'created_at')
     can_delete = False
     show_change_link = True
@@ -21,7 +21,7 @@ class AppointmentInline(admin.TabularInline):
 class PetAdmin(admin.ModelAdmin):
     list_display = ('name', 'species', 'owner', 'birth_date', 'created_at')
     list_filter = ('species', 'owner', 'created_at')
-    search_fields = ('name', 'owner__username')
+    search_fields = ('name', 'owner__username', 'phone')
     readonly_fields = ('created_at',)
     inlines = [AppointmentInline]  # Affiche tous les RDV liés
 
@@ -117,7 +117,7 @@ admin.site.unregister(User)
 @admin.register(User)
 class UserAdmin(BaseUserAdmin):
     # Ajoute 'id' à list_display
-    list_display = ('id', 'username', 'email', 'first_name', 'last_name', 'is_staff', 'is_active')
+    list_display = ('id', 'username', 'email', 'first_name', 'last_name','user_phone',  'is_staff', 'is_active')
     
     # Permet de trier par ID
     ordering = ('id',)
@@ -127,3 +127,14 @@ class UserAdmin(BaseUserAdmin):
     
     # Optionnel : champ de recherche
     search_fields = ('username', 'email', 'first_name', 'last_name')
+
+
+    def user_phone(self, obj):
+        # Récupère le dernier rendez-vous de l'utilisateur
+        last_appointment = Appointment.objects.filter(user=obj).order_by('-date').first()
+        if last_appointment and last_appointment.phone:
+            return format_html('<span style="color: #d9534f;">{}</span>', last_appointment.phone)
+        return "-"
+    
+    user_phone.short_description = 'Téléphone (dernier RDV)'
+    user_phone.admin_order_field = 'appointment__date'  # Tri par date du RDV
