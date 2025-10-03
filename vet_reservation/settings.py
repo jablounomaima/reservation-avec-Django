@@ -10,6 +10,7 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/5.2/ref/settings/
 """
 
+from datetime import timedelta
 from pathlib import Path
 
 from httpcore import MockBackend
@@ -60,11 +61,15 @@ SECRET_KEY = 'django-insecure-i09%=+^f1i$%sr_+t3tw_13pg9%)9*qj)h50-v@h=sikbvh)ea
 DEBUG = True
 
 ALLOWED_HOSTS = []
-SITE_ID = 1
+SITE_ID = 2
 
 # Application definition
 
 INSTALLED_APPS = [
+     'jazzmin',
+
+
+
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -237,3 +242,12 @@ class EmailBackend(MockBackend):
         if user.check_password(password) and self.user_can_authenticate(user):
             return user
         return None
+    
+
+
+
+
+
+# === Configuration de django-axes ===
+AXES_FAILURE_LIMIT = 3
+AXES_COOLOFF_TIME = timedelta(minutes=2)  # Blocage de 2 minutes

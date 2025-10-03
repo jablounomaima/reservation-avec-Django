@@ -1,5 +1,6 @@
 <!-- templates/account/login.html -->
 {% extends 'appointments/base.html' %}
+{% load socialaccount %}
 {% load static %}
 
 {% block content %}
@@ -130,6 +131,12 @@
 
     <p><a href="{% url 'account_reset_password' %}">Mot de passe oublié ?</a></p>
     <p class="login-link">Pas encore inscrit ? <a href="{% url 'account_signup' %}">Créer un compte</a></p>
+
+    <hr>
+
+<a href="{% provider_login_url 'google' %}" class="btn btn-danger">
+    <i class="fab fa-google"></i> Se connecter avec Google
+</a>
 </div>
 
 {% endblock %}

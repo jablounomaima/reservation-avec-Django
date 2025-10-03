@@ -17,10 +17,12 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import include, path
 from django.contrib.auth import views as auth_views
+
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', include('appointments.urls')),
-    path('accounts', include('allauth.urls')),  # AllAuth handles login, logout, social
+    path('accounts/', include('allauth.urls')), 
+   path('', include('appointments.urls')),
+   # path('account', include('allauth.urls')),  # AllAuth handles login, logout, social
 
 
 

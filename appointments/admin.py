@@ -4,9 +4,8 @@ from django.contrib import admin
 from django.urls import reverse
 from django.utils.html import format_html
 from .models import Pet, Appointment
-from django.utils.html import format_html
-from .models import Pet, Appointment
-# --- Inline : Afficher les RDV dans le profil de l'animal ---
+
+# --- Inline : Afficher les rendez-vous dans le profil de l’animal ---
 class AppointmentInline(admin.TabularInline):
     model = Appointment
     extra = 0
@@ -16,21 +15,22 @@ class AppointmentInline(admin.TabularInline):
     show_change_link = True
 
 
-# --- Admin pour Pet (le "fichier animal") ---
+# --- Admin pour Pet (Animal) ---
 @admin.register(Pet)
 class PetAdmin(admin.ModelAdmin):
     list_display = ('name', 'species', 'owner', 'birth_date', 'created_at')
     list_filter = ('species', 'owner', 'created_at')
     search_fields = ('name', 'owner__username', 'phone')
     readonly_fields = ('created_at',)
-    inlines = [AppointmentInline]  # Affiche tous les RDV liés
+    inlines = [AppointmentInline]  # Affiche tous les rendez-vous liés
 
     def get_queryset(self, request):
         qs = super().get_queryset(request)
         if not request.user.is_superuser:
             return qs.filter(owner=request.user)
         return qs
-     # 🔹 Ajout du lien PDF dans le formulaire d'édition
+
+    # 🔹 Lien PDF dans le formulaire d’édition
     def historique_pdf(self, obj):
         if obj:
             url = reverse('appointments:pet_history_pdf', args=[obj.id])
@@ -52,15 +52,15 @@ class PetAdmin(admin.ModelAdmin):
     change_form_template = 'admin/appointments/pet/change_form.html'
 
 
-
+# --- Admin pour Rendez-vous ---
 @admin.register(Appointment)
 class AppointmentAdmin(admin.ModelAdmin):
-    list_display = ('pet', 'service', 'date', 'time','phone', 'status', 'user', 'user_id', 'created_at')
+    list_display = ('pet', 'service', 'date', 'time', 'phone', 'status', 'user', 'user_id', 'created_at')
     list_filter = ('status', 'date', 'service', 'pet__species', 'pet__owner')
-    search_fields = ('pet__name', 'user__username', 'pet__owner__username','phone')
+    search_fields = ('pet__name', 'user__username', 'pet__owner__username', 'phone')
     date_hierarchy = 'date'
     ordering = ('-date', '-created_at')
-    readonly_fields = ('created_at', 'updated_at','phone')
+    readonly_fields = ('created_at', 'updated_at', 'phone')
 
     # Actions rapides
     actions = ['mark_as_confirmed', 'mark_as_rejected', 'mark_as_pending']
@@ -74,9 +74,9 @@ class AppointmentAdmin(admin.ModelAdmin):
                 obj.user.username
             )
         return "-"
+    user_id.short_description = 'Identifiant utilisateur'
+    user_id.admin_order_field = 'user'  
 
-    user_id.short_description = 'User ID'
-    user_id.admin_order_field = 'user'  # ✅ Une seule fois, c’est suffisant # Permet de trier par utilisateur
     @admin.action(description="✅ Confirmer les rendez-vous sélectionnés")
     def mark_as_confirmed(self, request, queryset):
         updated = queryset.update(status='confirmed')
@@ -103,38 +103,25 @@ class AppointmentAdmin(admin.ModelAdmin):
     status.short_description = 'Statut'
 
 
-
-
-
-
-
-from django.contrib import admin
+# --- Admin pour Utilisateur (custom) ---
 from django.contrib.auth.models import User
 from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
-# Désenregistrer l'admin par défaut pour personnaliser
+
+# Désenregistrer l’admin par défaut
 admin.site.unregister(User)
-    # Réenregistrer avec ajout de l'ID
+
+# Réenregistrer avec ajout de l’ID
 @admin.register(User)
 class UserAdmin(BaseUserAdmin):
-    # Ajoute 'id' à list_display
-    list_display = ('id', 'username', 'email', 'first_name', 'last_name','user_phone',  'is_staff', 'is_active')
-    
-    # Permet de trier par ID
+    list_display = ('id', 'username', 'email', 'first_name', 'last_name', 'user_phone', 'is_staff', 'is_active')
     ordering = ('id',)
-    
-    # Optionnel : permet de filtrer
     list_filter = ('is_staff', 'is_superuser', 'is_active', 'groups')
-    
-    # Optionnel : champ de recherche
     search_fields = ('username', 'email', 'first_name', 'last_name')
 
-
     def user_phone(self, obj):
-        # Récupère le dernier rendez-vous de l'utilisateur
         last_appointment = Appointment.objects.filter(user=obj).order_by('-date').first()
         if last_appointment and last_appointment.phone:
             return format_html('<span style="color: #d9534f;">{}</span>', last_appointment.phone)
         return "-"
-    
-    user_phone.short_description = 'Téléphone (dernier RDV)'
-    user_phone.admin_order_field = 'appointment__date'  # Tri par date du RDV
+    user_phone.short_description = 'Téléphone (dernier rendez-vous)'
+    user_phone.admin_order_field = 'appointment__date'
