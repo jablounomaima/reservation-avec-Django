@@ -71,7 +71,7 @@ class AppointmentForm(forms.ModelForm):
         widgets = {
             'date': forms.DateInput(attrs={'type': 'date'}),
             'notes': forms.Textarea(attrs={'rows': 3}),
-            'phone': forms.TextInput(attrs={'placeholder': '+212 6 12 34 56 78'}),
+            'phone': forms.TextInput(attrs={'placeholder': '+216 99 999 999'}),
         }
 
     def __init__(self, *args, **kwargs):
@@ -92,7 +92,7 @@ class AppointmentForm(forms.ModelForm):
             raise forms.ValidationError("Le numéro de téléphone est obligatoire.")
         phone = phone.strip()
         if not re.match(r'^\+?[\d\s\-\(\)]{10,15}$', phone):
-            raise forms.ValidationError("Numéro invalide. Ex: +212 6 12 34 56 78")
+            raise forms.ValidationError("Numéro invalide. Ex: +216 99 999 999")
         return phone
 
     def clean(self):
