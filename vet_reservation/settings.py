@@ -154,13 +154,22 @@ WSGI_APPLICATION = 'vet_reservation.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/5.2/ref/settings/#databases
 
+#DATABASES = {
+  #  'default': {
+   #     'ENGINE': 'django.db.backends.sqlite3',
+    #    'NAME': BASE_DIR / 'db.sqlite3',
+ #   }
+#}
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'stagedb',          # même que POSTGRES_DB
+        'USER': 'omaima',           # même que POSTGRES_USER
+        'PASSWORD': '1234',         # même que POSTGRES_PASSWORD
+        'HOST': 'localhost',        # ou '127.0.0.1'
+        'PORT': '5434',             # même que le port exposé
     }
 }
-
 
 # Password validation
 # https://docs.djangoproject.com/en/5.2/ref/settings/#auth-password-validators
@@ -249,5 +258,5 @@ class EmailBackend(MockBackend):
 
 
 # === Configuration de django-axes ===
-AXES_FAILURE_LIMIT = 3
-AXES_COOLOFF_TIME = timedelta(minutes=2)  # Blocage de 2 minutes
+#AXES_FAILURE_LIMIT = 3
+#AXES_COOLOFF_TIME = timedelta(minutes=2)  # Blocage de 2 minutes

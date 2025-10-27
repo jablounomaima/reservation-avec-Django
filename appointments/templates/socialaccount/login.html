@@ -1,0 +1,57 @@
+{% extends "account/base2.html" %}  {# ou "base.html" selon ta structure #}
+
+{% load i18n static %}
+
+{% block head_title %}{% trans "Connexion Google" %}{% endblock %}
+
+{% block extra_css %}
+<style>
+  .google-confirm-card {
+    max-width: 500px;
+    margin: 2rem auto;
+    padding: 2rem;
+    border-radius: 10px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    background: #fff;
+    text-align: center;
+  }
+  .btn-continue {
+    background-color: #4285F4;
+    color: white;
+    border: none;
+    padding: 12px 30px;
+    font-size: 1.1rem;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+  }
+  .btn-continue:hover {
+    background-color: #3367d6;
+  }
+  h1 {
+    color: #333;
+    margin-bottom: 1.5rem;
+  }
+  p {
+    color: #555;
+    font-size: 1.05rem;
+    line-height: 1.6;
+  }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="google-confirm-card">
+  <h1>🔐 Connexion avec Google</h1>
+  <p>
+    Vous êtes sur le point de vous connecter à l’aide de votre compte Google.
+  </p>
+  <form method="post">
+    {% csrf_token %}
+    <button type="submit" class="btn-continue">✅ Continuer</button>
+  </form>
+  <div style="margin-top: 1.5rem;">
+    <a href="{% url 'account_login' %}" style="color: #666; text-decoration: none;">← Retour à la page de connexion</a>
+  </div>
+</div>
+{% endblock %}
