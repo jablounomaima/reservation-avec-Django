@@ -3,12 +3,17 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Clinique Vétérinaire professionnelle - Réservez en ligne vos rendez-vous pour vos animaux de compagnie">
+    <meta name="keywords" content="vétérinaire, clinique, animaux, chiens, chats, consultation, Tunisie">
     <title>Clinique Vétérinaire - Réservation</title>
+    
+    {% load static %}
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/x-icon" href="{% static 'images/favicon.ico' %}">
 
     <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-
-    {% load static %}
     <!-- CSS personnalisé -->
     <link rel="stylesheet" href="{% static 'appointments/css/style.css' %}">
     <link rel="stylesheet" href="{% static 'appointments/css/admin.css' %}">
@@ -22,14 +27,14 @@
 <body class="bg-light" style="font-family: 'Poppins', sans-serif;">
 
     <!-- Navbar -->
-    <nav class="navbar navbar-expand-lg navbar-dark bg-primary shadow-sm">
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary shadow-lg sticky-top">
         <div class="container">
             <a class="navbar-brand d-flex align-items-center" href="{% url 'appointments:appointment_list' %}">
                 <img src="{% static 'images/Clinique.jpg' %}" 
                      alt="Logo Clinique Vétérinaire" 
                      style="width: 60px; height: auto;" 
                      class="me-2 rounded-circle">
-                <span>🐾 Clinique Vétérinaire</span>
+                <span class="fw-bold">🐾 Clinique Vétérinaire</span>
             </a>
 
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" 
@@ -41,18 +46,18 @@
                 <div class="navbar-nav ms-auto">
                     {% if user.is_authenticated %}
                         <span class="nav-link disabled">👋 Bonjour, <strong>{{ user.username }}</strong></span>
-                        <a class="nav-link" href="{% url 'appointments:home' %}"><i class="fas fa-home"></i> Home</a>
-                        <a class="nav-link" href="{% url 'appointments:appointment_create' %}"><i class="fas fa-calendar-plus"></i> Nouveau RDV</a>
-                        <a class="nav-link" href="{% url 'appointments:appointment_list' %}"><i class="fas fa-list"></i> Liste RDV</a>
+                        <a class="nav-link nav-hover" href="{% url 'appointments:home' %}"><i class="fas fa-home"></i> Accueil</a>
+                        <a class="nav-link nav-hover" href="{% url 'appointments:appointment_create' %}"><i class="fas fa-calendar-plus"></i> Nouveau RDV</a>
+                        <a class="nav-link nav-hover" href="{% url 'appointments:appointment_list' %}"><i class="fas fa-list"></i> Mes RDV</a>
 
                         {% if user.is_staff %}
-                            <a class="nav-link" href="{% url 'admin:index' %}"><i class="fas fa-tools"></i> Admin</a>
+                            <a class="nav-link nav-hover admin-link" href="{% url 'admin:index' %}"><i class="fas fa-tools"></i> Administration</a>
                         {% endif %}
-                        <a class="nav-link text-danger" href="{% url 'account_logout' %}"><i class="fas fa-sign-out-alt"></i> Déconnexion</a>
+                        <a class="nav-link nav-hover logout-link" href="{% url 'account_logout' %}"><i class="fas fa-sign-out-alt"></i> Déconnexion</a>
                     {% else %}
-                    <a class="nav-link" href="{% url 'appointments:home' %}"><i class="fas fa-sign-in-alt"></i> Home</a>
-                        <a class="nav-link" href="{% url 'account_login' %}"><i class="fas fa-sign-in-alt"></i> Connexion</a>
-                        <a class="nav-link" href="{% url 'account_signup' %}"><i class="fas fa-user-plus"></i> Inscription</a>
+                        <a class="nav-link nav-hover" href="{% url 'appointments:home' %}"><i class="fas fa-home"></i> Accueil</a>
+                        <a class="nav-link nav-hover" href="{% url 'account_login' %}"><i class="fas fa-sign-in-alt"></i> Connexion</a>
+                        <a class="nav-link nav-hover signup-link" href="{% url 'account_signup' %}"><i class="fas fa-user-plus"></i> Inscription</a>
                     {% endif %}
                 </div>
             </div>
@@ -78,7 +83,153 @@
 
     <!-- Bootstrap JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+    <style>
+        /* Navbar animations */
+        .navbar {
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+        }
+
+        .navbar-brand img {
+            transition: transform 0.3s ease;
+        }
+
+        .navbar-brand:hover img {
+            transform: rotate(10deg) scale(1.1);
+        }
+
+        .navbar-brand:hover {
+            color: #ffd700 !important;
+        }
+
+        /* Navigation links hover effects */
+        .nav-hover {
+            transition: all 0.3s ease;
+            position: relative;
+            padding: 0.5rem 1rem !important;
+        }
+
+        .nav-hover:hover {
+            color: #ffd700 !important;
+            transform: translateY(-2px);
+        }
+
+        .nav-hover::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            width: 0;
+            height: 2px;
+            background: #ffd700;
+            transition: all 0.3s ease;
+            transform: translateX(-50%);
+        }
+
+        .nav-hover:hover::after {
+            width: 20%;
+        }
+
+        /* Logo bounce animation */
+        @keyframes logoBounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-5px); }
+        }
+
+        .navbar-brand {
+            animation: logoBounce 2s ease-in-out infinite;
+        }
+
+        /* Signup link special style */
+        .signup-link {
+            background: linear-gradient(135deg, #ffd700, #ffed4e);
+            border-radius: 25px;
+            padding: 0.3rem 1rem !important;
+            color: #003366 !important;
+            font-weight: 600;
+            margin-left: 0.5rem !important;
+        }
+
+        .signup-link:hover {
+            background: linear-gradient(135deg, #ffed4e, #ffd700) !important;
+            transform: scale(1.05);
+            color: #003366 !important;
+        }
+
+        .signup-link::after {
+            display: none;
+        }
+
+        /* Logout link style */
+        .logout-link:hover {
+            color: #ff6b6b !important;
+        }
+
+        /* Admin link style */
+        .admin-link:hover {
+            color: #ffc107 !important;
+        }
+
+        /* Sticky navbar effect */
+        .navbar.sticky-top {
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Main content improvement */
+        main {
+            min-height: calc(100vh - 200px);
+        }
+
+        /* Alert messages enhancement */
+        .alert {
+            border-radius: 15px;
+            border: none;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            animation: slideDown 0.5s ease-out;
+        }
+
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Smooth scroll */
+        html {
+            scroll-behavior: smooth;
+        }
+
+        /* Responsive navbar */
+        @media (max-width: 991px) {
+            .navbar-nav {
+                text-align: center;
+                padding: 1rem 0;
+            }
+
+            .nav-hover {
+                margin: 0.3rem 0;
+            }
+
+            .signup-link {
+                margin: 0.5rem auto;
+                width: fit-content;
+            }
+        }
+
+        /* Welcome message */
+        .nav-link.disabled {
+            color: #ffd700 !important;
+            font-weight: 600;
+        }
+    </style>
 </body>
 </html>
+
 
 
