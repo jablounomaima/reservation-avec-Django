@@ -25,7 +25,8 @@
                 <th>Service</th>
                 <th>Date</th>
                 <th>Statut</th>
-                <th>Notes</th>
+                <th>Notes du client</th>
+                <th>Notes Vétérinaire</th>
             </tr>
         </thead>
         <tbody>
@@ -35,6 +36,7 @@
                 <td>{{ appt.date|date:"d/m/Y" }}</td>
                 <td>{{ appt.get_status_display }}</td>
                 <td>{{ appt.notes|default:"—" }}</td>
+                <td>{{ appt.admin_notes|default:"-" }}</td> 
             </tr>
             {% endfor %}
         </tbody>

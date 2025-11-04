@@ -258,5 +258,5 @@ class EmailBackend(MockBackend):
 
 
 # === Configuration de django-axes ===
-#AXES_FAILURE_LIMIT = 3
-#AXES_COOLOFF_TIME = timedelta(minutes=2)  # Blocage de 2 minutes
+AXES_FAILURE_LIMIT = 3
+AXES_COOLOFF_TIME = timedelta(minutes=2)  # Blocage de 2 minutes
